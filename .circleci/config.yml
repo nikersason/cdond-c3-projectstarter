@@ -281,7 +281,7 @@ jobs:
           name: Install dependencies
           command: |
             echo 'installing ansible'
-            apk add --update ansible openssh-client tar gzip
+            apk add --update ansible
             echo 'installing nodejs & npm'
             apk add nodejs-current
             apk add npm
