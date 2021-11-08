@@ -149,6 +149,32 @@ jobs:
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run: apk add --update tar 
+      - run: apk add --update gzip 
+      - run: pip install awscli
+      - run: aws --version
+      - add_ssh_keys:
+            fingerprints:
+              - "ac:38:4a:fa:83:90:fb:f2:49:9b:7d:05:25:58:9b:bb"
+      - attach_workspace:
+            at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:7} 
+
 workflows:
   default:
     jobs:
@@ -167,3 +193,5 @@ workflows:
           # filters:
           #   branches:
           #     only: [test-feature-branch]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
