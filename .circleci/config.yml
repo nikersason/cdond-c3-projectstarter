@@ -328,10 +328,6 @@ jobs:
       - checkout
       - run: pip install awscli    #for destroy environment &  delete-bucket
       - run: apk add --update curl #for revert migrations
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       # your code here
       - run:
           name: Backend smoke test.
           command: |
